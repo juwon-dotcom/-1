@@ -16,8 +16,15 @@
 - -Force(리눅스 -a): all (숨김 파일, 종료된 것까지 전부)
 - Ctrl + C: 지금 실행 중인 명령 멈춰
 - whoami: 현재 사용자 이름
+- CMD: 컨테이너가 실행될 때 기본으로 할 일
+- #: 주석(설명용, 실행 안 됨)
+- code: VScode로 파일 열기(편집기에 등장, 내용 작성 편함)  
+- ls -l	파일 권한을 자세히 보기 (-l = long)
+- ls -ld	디렉토리 자체의 권한 보기 (-d)
+- chmod 644	권한을 644로 변경 (chmod = change mode)
+- ls -l과 ls -ld 차이: -d 없이 폴더를 보면 폴더 안 내용이 나와요. -d를 붙여야 폴더 자체 권한이 보여요.
 
-**리눅스 전용**
+**리눅스(≒ubuntu) 전용** 쉘(bash)
   - ls -l: 상세 목록(권한·소유자·크기 표시)  →  PowerShell: Get-ChildItem 또는 dir
   - ls -a: 숨김 파일까지 모두 표시  →  PowerShell: -Force 옵션
   - touch 파일명: 빈 파일 생성  →  PowerShell: New-Item 또는 ni
@@ -26,6 +33,7 @@
   - chmod 644 파일명: 소유자만 수정 가능하게 변경
   - chown 사용자 파일명: 파일 소유자 변경  →  PowerShell: icacls
   - man 명령어: 명령어 설명서 보기  →  PowerShell: Get-Help
+  - FROM: 어떤 이미지를 바탕으로 시작할지 (여기선 ubuntu)
 
 **권한 읽는 법**
 - -rw-r--r--   1 root  root   6  Nov 3 09:26  test.txt   
@@ -68,6 +76,8 @@
 - docker logs <이름>: 컨테이너 기록 보기(문제 생기면 여기서 원인 찾음)
 - docker stats --no-stream: 자원 사용량 1회 확인
 - docker images: 이미지 목록
+- up : 설정대로 빌드 + 실행
+- -d : 백그라운드 실행
 
 # 개발 워크스테이션 구축
 
@@ -114,3 +124,51 @@ PS C:\...\-1> docker stats --no-stream
 CONTAINER ID   NAME         CPU %   MEM USAGE / LIMIT    ...   PIDS
 51627b07f2da   test-nginx   0.00%   22.23MiB / 15.25GiB  ...   25
 ```
+
+# Docker 이미지 빌드 실습 (Dockerfile → 커스텀 이미지)
+
+## 파일 구성
+- `Dockerfile` : nginx 기반, index.html을 웹 루트에 복사
+- `index.html` : 접속 확인용 테스트 페이지
+
+## Dockerfile 핵심 명령어
+- FROM: 바탕이 되는 이미지 지정 (여기선 nginx)
+- COPY: 로컬 파일을 이미지 안으로 복사 (index.html → 웹 루트)
+- (CMD/EXPOSE 등은 nginx 이미지에 기본 설정됨)
+
+## 실행 순서
+
+### 1. 이미지 빌드
+```
+PS C:\...\-1\docker-practice> docker build -t my-web .
+```
+- `-t my-web` : 이미지에 `my-web` 이라는 이름(태그) 붙이기
+- `.` : 현재 폴더의 Dockerfile 사용
+
+### 2. 컨테이너 실행
+```
+PS C:\...\-1\docker-practice> docker run -d -p 8080:80 --name web my-web
+```
+- `-d` : 백그라운드 실행
+- `-p 8080:80` : 내 PC 8080 포트 → 컨테이너 80 포트 연결
+- `--name web` : 컨테이너 이름 지정
+
+### 3. 실행 확인
+```
+PS C:\...\-1\docker-practice> docker ps
+CONTAINER ID   IMAGE    COMMAND                   STATUS         PORTS                                     NAMES
+b3baf8a94400   my-web   "/docker-entrypoint.…"   Up 3 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   web
+```
+
+### 4. 브라우저 접속 확인
+```
+http://localhost:8080
+```
+→ 접속 성공 (화면 캡처 첨부)
+![접속확인](./images/docker-result.png)
+
+## 트러블슈팅 기록
+- **증상**: `docker run` 실행 시 `requires at least 1 argument` 에러
+- **원인**: 실행할 이미지 이름을 빠뜨리고 `docker run` 만 입력함
+- **해결**: 이미지 이름까지 포함해 `docker run -d -p 8080:80 --name web my-web` 로 재실행
+- **참고**: 같은 이름의 컨테이너가 남아 있으면 `docker rm -f web` 로 정리 후 재실행
