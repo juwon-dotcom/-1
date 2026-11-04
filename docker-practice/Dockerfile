@@ -1,5 +1,5 @@
-# 베이스 이미지
-FROM ubuntu:latest
+#nginx 이미지를 기반으로 사용
+FROM nginx:latest
 
-# 실행 시 출력할 메시지
-CMD ["echo", "안녕하세요! 제가 만든 첫 이미지입니다 🎉"]
+#내가 만든 페이지를 nginx 기본 페이지 위치에 복사
+COPY index.html /usr/share/nginx/html/index.html
