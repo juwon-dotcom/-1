@@ -81,6 +81,29 @@
 
 # 개발 워크스테이션 구축
 
+# 개발 워크스테이션 구축 과제
+
+## 제출 저장소
+- GitHub Repository: https://github.com/계정명/저장소명
+
+## 수행 체크리스트
+- [x] 터미널 기본 조작
+- [x] 파일/디렉토리 권한 실습
+- [x] Docker 설치 및 점검
+- [x] hello-world 실행
+- [x] ubuntu 컨테이너 실습
+- [x] Dockerfile 기반 커스텀 이미지 빌드
+- [x] 포트 매핑 접속 확인
+- [ ] 바인드 마운트 반영 확인
+- [x] Docker 볼륨 영속성 확인
+- [ ] GitHub/VSCode 연동 증거 첨부
+
+## 증거 자료 위치
+- Dockerfile: ./docker-practice/Dockerfile
+- 웹 페이지: ./docker-practice/index.html
+- 포트 접속 스크린샷: ./images/web-8080.png
+- GitHub 연동 스크린샷: ./images/vscode-github.png
+
 ## 1. 프로젝트 개요
 개발 환경(PowerShell / Docker / Git)을 설치하고
 GitHub 저장소를 연결하여 워크스테이션을 구축하는 미션입니다.
