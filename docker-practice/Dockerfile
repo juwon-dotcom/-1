@@ -1,5 +1,5 @@
-#nginx ì´ë¯¸ì§€ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ì‚¬ìš©
+#nginx ÀÌ¹ÌÁö¸¦ ±â¹İÀ¸·Î »ç¿ë
 FROM nginx:latest
 
-#ë‚´ê°€ ë§Œë“  í˜ì´ì§€ë¥¼ nginx ê¸°ë³¸ í˜ì´ì§€ ìœ„ì¹˜ì— ë³µì‚¬
+#³»°¡ ¸¸µç ÆäÀÌÁö¸¦ nginx ±âº» ÆäÀÌÁö À§Ä¡¿¡ º¹»ç
 COPY index.html /usr/share/nginx/html/index.html
